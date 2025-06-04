@@ -1,0 +1,35 @@
+# Crea un entorno virtual dentro de la carpeta del proyecto
+python -m venv venv
+
+# Activa el entorno virtual
+# En Windows:
+.\venv\Scripts\activate
+# En macOS/Linux:
+source venv/bin/activate
+
+# Verifica que el entorno esté activo (verás '(venv)' al inicio de tu prompt)
+# (venv)
+
+# Asegúrate de que tu entorno virtual esté activado antes de ejecutar esto
+(venv) 
+pip install "fastapi[all]" uvicorn
+
+# Para ejecutar esta aplicación, necesitas Uvicorn.
+# Abre tu terminal, asegúrate de estar en la carpeta 'mi_api_tareas' y con el entorno virtual activado, y ejecuta:
+uvicorn app.main:app --reload
+# Luego, abre tu navegador y ve a http://127.0.0.1:8000
+# Para ver la documentación automática, ve a http://127.0.0.1:8000/docs
+
+# (venv) Para la base de datos
+pip install sqlalchemy pymysql
+
+Añadir tablas a la BBDD
+(venv) 
+python create_db_tables.py
+
+Instalar Librerías de Hashing y JWT
+# (venv)
+pip install "passlib[bcrypt]" python-jose[cryptography]
+
+Generar clave
+openssl rand -hex 32

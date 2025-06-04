@@ -1,0 +1,7 @@
+TODO-LIST/
+├── venv/
+├── app/
+│   ├── main.py
+│   ├── database.py
+│   └── models.py
+└── create_db_tables.py

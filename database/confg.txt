@@ -1,0 +1,4 @@
+CREATE DATABASE fastapi_tasks_db;
+CREATE USER 'fastapi_user'@'localhost' IDENTIFIED BY 'your_password';
+GRANT ALL PRIVILEGES ON fastapi_tasks_db.* TO 'fastapi_user'@'localhost';
+FLUSH PRIVILEGES;
