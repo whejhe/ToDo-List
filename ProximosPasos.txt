@@ -1,0 +1,36 @@
+🚧 Próximos Pasos y Posibles Mejoras
+
+Este proyecto es un punto de partida. Aquí hay algunas ideas para extenderlo y mejorarlo:
+
+    Asociar Tareas con Usuarios: 
+    Actualmente, las tareas no tienen un propietario. 
+    El siguiente paso natural es modificar el modelo Task para incluir un owner_id 
+    (ForeignKey a User.id) y ajustar las operaciones CRUD para que los usuarios solo puedan ver, 
+    crear, actualizar y eliminar sus propias tareas.
+    
+    Roles y Permisos: 
+    Implementar roles de usuario (ej. "admin", "user") para controlar el acceso a ciertas 
+    operaciones (ej. solo administradores pueden borrar tareas).
+    
+    Refactorización de get_db: 
+    Ya se ha mencionado, pero consolidar la función get_db en app/database.py y solo 
+    importarla en otros módulos.
+    
+    Sistema de Migraciones (Alembic): 
+    Para gestionar cambios en el esquema de la base de datos de forma controlada y incremental 
+    (esencial en proyectos más grandes).
+    
+    Paginación para Listas de Tareas: 
+    Implementar paginación para los endpoints GET /tasks/ para manejar grandes volúmenes de 
+    datos de manera eficiente.
+    
+    Filtrado y Búsqueda de Tareas: 
+    Añadir parámetros de consulta para filtrar tareas por estado (completed=True/False), 
+    título, etc.
+    
+    Pruebas Unitarias e Integración: 
+    Escribir tests para asegurar la funcionalidad y prevenir regresiones.
+    
+    Despliegue: 
+    Preparar la aplicación para su despliegue en un servidor de producción 
+    (ej. Docker, Nginx/Gunicorn, un servicio PaaS).

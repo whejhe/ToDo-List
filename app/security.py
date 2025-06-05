@@ -4,8 +4,9 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 # Importamos las excepciones específicas de jose y el módulo jwt
+# Modificamos la importación de jose.exceptions
 from jose import JWTError, jwt
-from jose.exceptions import ExpiredSignatureError, JWSError, JWSNoHeaderError 
+from jose.exceptions import ExpiredSignatureError # Esta suele ser suficiente y estable
 
 # ¡ESTO ES LO QUE FALTABA! Importar HTTPException y status de FastAPI
 from fastapi import HTTPException, status 
@@ -18,7 +19,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # --- Configuración de Hashing de Contraseñas ---
-# (Ya definido en crud.py, pero lo podemos centralizar aquí si se usa en varios lugares)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback_secret_key_if_not_set_in_env")
@@ -66,12 +66,9 @@ def decode_access_token(token: str):
             detail="Token expirado",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    except (JWSError, JWSNoHeaderError): # Captura errores de firma o formato del JWT
-        # Para errores de firma o formato (que no sean expiración),
-        # por seguridad, no damos detalles específicos. Devolvemos None.
-        print("DEBUG: Token con firma o formato inválido.") # Útil para depuración interna
-        return None
-    except JWTError as e:
-        # Captura cualquier otro error genérico de JWT que no hayamos cubierto
+    # Cambiamos la captura de errores. JWTError ya es bastante amplio.
+    # Si ExpiredSignatureError no la captura, JWTError general lo hará.
+    except JWTError as e: 
+        # Para errores de firma o formato, o cualquier otro error JWT
         print(f"DEBUG: Error JWT genérico inesperado: {e}") # Útil para depuración interna
         return None

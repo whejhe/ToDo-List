@@ -2,18 +2,15 @@
 
 from sqlalchemy.orm import Session
 from . import models, schemas
-from passlib.context import CryptContext # Importa para hashing de contraseñas
+from passlib.context import CryptContext
 
 # --- Hashing de Contraseñas ---
-# Configura el contexto de hashing. Usamos bcrypt por ser seguro y recomendado.
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verifica si una contraseña plana coincide con una contraseña hasheada."""
     return pwd_context.verify(plain_password, hashed_password)
 
 def get_password_hash(password: str) -> str:
-    """Hashea una contraseña."""
     return pwd_context.hash(password)
 
 # --- Funciones CRUD para Tareas (ya existentes) ---
@@ -23,8 +20,13 @@ def get_task(db: Session, task_id: int):
 def get_tasks(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Task).offset(skip).limit(limit).all()
 
-def create_task(db: Session, task: schemas.TaskCreate):
-    db_task = models.Task(title=task.title, description=task.description)
+# MODIFICACIÓN CLAVE AQUÍ: Aceptar owner_id
+def create_task(db: Session, task: schemas.TaskCreate, owner_id: int): # <--- ¡Añadimos owner_id!
+    """
+    Crea una nueva tarea en la base de datos, asignándola al usuario especificado.
+    """
+    # Asignamos el owner_id al modelo de tarea
+    db_task = models.Task(title=task.title, description=task.description, owner_id=owner_id) # <--- ¡Asignamos owner_id!
     db.add(db_task)
     db.commit()
     db.refresh(db_task)
@@ -64,13 +66,9 @@ def get_user_by_username(db: Session, username: str):
 
 def create_user(db: Session, user: schemas.UserCreate):
     """Crea un nuevo usuario con la contraseña hasheada."""
-    hashed_password = get_password_hash(user.password) # Hashea la contraseña
+    hashed_password = get_password_hash(user.password)
     db_user = models.User(username=user.username, hashed_password=hashed_password)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
-
-def get_user(db: Session, user_id: int):
-    """Obtiene un usuario por su ID."""
-    return db.query(models.User).filter(models.User.id == user_id).first()
